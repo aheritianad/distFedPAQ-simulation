@@ -15,4 +15,5 @@ pip-delete-this-directory.txt
 
 # IPython
 profile_default/
-ipython_config.py
+ipython_config.pydraft.py
+draft.py

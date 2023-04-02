@@ -1,0 +1,9 @@
+beartype
+math
+numpy
+matplotlib
+sklearn
+multiprocessing
+tqdm
+argparse
+itertools

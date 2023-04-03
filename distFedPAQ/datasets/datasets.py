@@ -1,7 +1,6 @@
 from beartype import beartype
-from beartype.typing import Any
+from beartype.typing import Optional
 
-# from math import ceil
 
 import numpy as np
 from numpy.typing import NDArray
@@ -16,8 +15,8 @@ class Data:
         self.__size = content.shape
         self.__batch_size = batch_size
         self.__selector = np.arange(self.size[0])
-        # self.__n_batches = ceil(self.size[0] / self.__batch_size)
-        # self.__samples = self.__sampler()
+        np.random.shuffle(self.__selector)
+        self.__sampler_index = 0
 
     @property
     def size(self):
@@ -52,8 +51,6 @@ class Data:
 
         assert value > 0, "Batch size must be a positive integer"
         self.__batch_size = value
-        # self.__n_batches = ceil(self.size[0] / self.__batch_size)
-        # self.__samples = self.__sampler()
 
     @property
     def content(self):
@@ -81,8 +78,8 @@ class Data:
         self.__data = value.copy()
         self.__size = value.shape[0]
         self.__selector = np.arange(self.size[0])
-        # self.__n_batches = ceil(self.size[0] / self.__batch_size)
-        # self.__samples = self.__sampler()
+        np.random.shuffle(self.__selector)
+        self.__sampler_index = 0
 
     def __len__(self):
         """
@@ -96,23 +93,23 @@ class Data:
         return self.size[0]
 
     @beartype
-    def __getitem__(self, index: Any):
+    def __getitem__(self, size: int):
         """
-        Retrieving a sample; same as `sample` method.
+        Retrieving `size` sample;
 
         Parameters
         ----------
-        index : Any
-            will not be considered
+        size : int
+            sample size
 
         Returns
         -------
         NDArray
-            a sample
+            a sample of size `size`
         """
         return self.sample()
 
-    def sample(self):
+    def sample(self, size: Optional[int] = None):
         """
         Retrieving a sample; same as `sample` method.
 
@@ -121,26 +118,13 @@ class Data:
         NDArray
             a sample
         """
-        np.random.shuffle(self.__selector)
-        start = 0  # i * self.__batch_size
-        stop = self.__batch_size  # (i + 1) * self.__batch_size
-        idx = self.__selector[start:stop]
-        return self.__data[idx]
-        # return next(self.__samples)
+        if size is None:
+            size = self.__batch_size
 
-    # def __sampler(self):
-    #     """
-    #     Sample generator for the data
-
-    #     Yields
-    #     ------
-    #     NDArray
-    #         a sample
-    #     """
-    #     while True:
-    #         np.random.shuffle(self.__selector)
-    #         for i in range(self.__n_batches):
-    #             start = i * self.__batch_size
-    #             stop = (i + 1) * self.__batch_size
-    #             idx = self.__selector[start:stop]
-    #             yield self.__data[idx]
+        start = self.__sampler_index
+        self.__sampler_index += size
+        selected = self.__selector[start : self.__sampler_index]
+        if self.size[0] <= self.__sampler_index:
+            self.__sampler_index = 0
+            np.random.shuffle(self.__selector)
+        return self.__data[selected]

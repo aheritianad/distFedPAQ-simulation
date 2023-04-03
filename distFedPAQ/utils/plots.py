@@ -37,7 +37,3 @@ def custom_plot(
             plt.plot(losses[i], style2, label="{1}$Node_{0}$".format(i, pref))
         except IndexError:
             break
-
-    # ##> LEGEND
-    plt.xlabel("iteration")
-    plt.legend()

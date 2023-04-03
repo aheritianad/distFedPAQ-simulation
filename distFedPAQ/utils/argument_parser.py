@@ -29,15 +29,15 @@ def arg_parser() -> Tuple[
         "--local-update",
         "-loc",
         type=int,
-        default=100,
-        help="number of node iteration for local update. Default to 100.",
+        default=10,
+        help="number of iterations per node for each local update. Default to 10.",
     )
     parser.add_argument(
         "--external-update",
         "-ext",
         type=int,
         default=100,
-        help="number of time that some nodes (see nodes_ext_ave) will update externally by averaging. Default to 100.",
+        help="number of time that some nodes (see -n-ext-ave) will update externally by averaging. Default to 100.",
     )
     parser.add_argument(
         "--nodes-external-averaging",
@@ -51,14 +51,14 @@ def arg_parser() -> Tuple[
         "-bs",
         type=int,
         default=1,
-        help="size of a batch for a local update. Default to 1.",
+        help="size of a batch from local data of a node in each iteration of its local update. Default to 1.",
     )
     parser.add_argument(
         "--learning-rate",
         "-lr",
         type=float,
-        default=1e-4,
-        help="learning rate for a local update. Default to 1e-4.",
+        default=1e-3,
+        help="learning rate for nodes' local update. Default to 1e-3.",
     )
     parser.add_argument(
         "--momentum",
@@ -86,7 +86,7 @@ def arg_parser() -> Tuple[
         "-rs",
         type=int,
         default=1,
-        help="number of time that the single node will do a loop of loc local updates before evaluation will be multiplied by this value. Default to 1",
+        help="number of time that the 'single node' will do loops of local updates before evaluation. 1",
     )
 
     # > argument fetcher from parser

@@ -48,6 +48,8 @@ class Node:
             *weight_size
         )  # local weight for the objective function
 
+        self.external_update = self.__external_update
+
     @property
     def data_batch_size(self):
         """
@@ -103,7 +105,7 @@ class Node:
         # time.sleep(0.001)
 
     @beartype
-    def external_update(
+    def __external_update(
         self,
         *others,
         weight: Optional[float] = None,

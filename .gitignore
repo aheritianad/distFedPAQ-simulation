@@ -16,4 +16,12 @@ pip-delete-this-directory.txt
 # IPython
 profile_default/
 ipython_config.pydraft.py
+
+# .venv
+.venv
+
+# DS_Store
+.DS_Store
+
 draft.py
+*___.py

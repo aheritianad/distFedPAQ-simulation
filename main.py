@@ -115,10 +115,39 @@ if __name__ == "__main__":
     print(f"number of time a node made an external update :")
     for i, k in sorted(ave.items(), key=lambda x: (x[1], -x[0]), reverse=True):
         print(f"\tNode_{i+1} -> {k} times.")
+
+    # > INSTRUCTIONS
+    print(
+        f""""
+        
+        --- INSTRUCTION FOR PLOT FUNCTION ---
+        
+        >>> plot(1,3,5) # plot nodes 1,3,5 evaluations. It can take as many value as nodes available
+                        # note that 0 stands for single node.     
+                        
+        >>> plot(start=2,stop=5) # plot evaluations for node 2,3,4,5 i.e. from start to stop (inclusive)
+        >>> plot(start= 3)# will not do anything unless stop is specified. start default value is 1.
+        >>> plot(stop=5) # plot evaluations for node 1,2,3,4,5 i.e. from 1 to stop (inclusive)
+        >>> plot(stop=-1) # plot evaluations for each node start to node LAST i.e. ALL nodes
+        >>> plot(start=2, stop=2) # plot evaluations for SECOND node to SECOND LAST node. 
+        
+        >>> plot(ave = False) # hide the plot of average of the nodes
+        >>> plot(single = False) # hide the plot of single node
+        >>> plot(train = False) # hide evaluation with train data
+        >>> plot(test = False) # hide evaluation with test data
+        
+        USER CAN USE ANY COMBINATION OF THESE BUT FOLLOWING THIS ORDER IS RECOMMENDED.
+        eg : 
+            >>> plot(1,2,3, ave=False, single=False, train=False, test=True) # show eval of node 1, node2 and node3 on test data
+            >>> plot(start=1,stop=3, ave=False, single=False, train=False) # the same as above
+        NB : single node got trained {single_times} x more than others node before evaluations.
+
+        """
+    )
     # > SETUPS FOR PLOTTING
 
     title = f"""
-    Value of $f$ for {n_loc_update} local update per iteration
+    Value of $f$ for a local update per iteration
     nb of nodes = {n}
     batch size = {batch_size}
     nb iter for loc update = {n_loc_update}
@@ -126,14 +155,14 @@ if __name__ == "__main__":
     """
 
     def plot(
-        *indices, i_start=1, i_stop=None, single=True, ave=True, train=True, test=True
+        *indices, start=1, stop=None, single=True, ave=True, train=True, test=True
     ):
         if train:
             custom_plot(
                 losses_train,
                 *indices,
-                i_start=i_start,
-                i_stop=i_stop,
+                i_start=start,
+                i_stop=stop,
                 single=single,
                 ave=ave,
                 pref="train ",
@@ -144,8 +173,8 @@ if __name__ == "__main__":
             custom_plot(
                 losses_test,
                 *indices,
-                i_start=i_start,
-                i_stop=i_stop,
+                i_start=start,
+                i_stop=stop,
                 single=single,
                 ave=ave,
                 pref="test ",
@@ -154,3 +183,5 @@ if __name__ == "__main__":
             )
         plt.title(title)
         plt.show()
+
+    plot(stop=-1)

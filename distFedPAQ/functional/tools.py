@@ -3,7 +3,7 @@ from numpy.typing import NDArray
 
 from beartype import beartype
 from beartype.typing import Optional, Any, Callable, Iterable, Literal, List
-import multiprocessing as mp
+import multiprocess as mp
 
 
 __all__ = [
@@ -64,7 +64,7 @@ def parallel_trainer(
     # #> losses computation
     if eval_data is not None and loss_fn is not None:
 
-        ls = [
+        losses = [
             run_in_parallel_multi_args(
                 function=loss_fn,
                 args=zip(data, new_weights),
@@ -72,7 +72,6 @@ def parallel_trainer(
             )
             for data in eval_data
         ]
-        losses = list(zip(*ls))
         return losses
 
 

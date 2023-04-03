@@ -9,7 +9,7 @@ __all__ = ["custom_plot"]
 @beartype
 def custom_plot(
     losses: Iterable,
-    *indices: Iterable[int],
+    *indices,  # g: Iterable[int],
     i_start: int = 1,
     i_stop: Optional[int] = None,
     single: bool = True,
@@ -34,7 +34,7 @@ def custom_plot(
 
     for i in indices:
         try:
-            plt.plot(losses[i], style2, label=r"{1}$Node_{0}$".format(i, pref))
+            plt.plot(losses[i], style2, label="{1}$Node_{0}$".format(i, pref))
         except IndexError:
             break
 

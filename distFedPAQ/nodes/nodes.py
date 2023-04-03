@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-# ~import time
 from distFedPAQ.datasets import Data
 
 import numpy as np
@@ -20,6 +19,7 @@ class Node:
         weight_size: Union[Tuple, int],
         grad_f: Callable,
         batch_size: int = 1,
+        momentum: float = 0,
     ) -> None:
         """
         Trainer node with local `sgd` updater.
@@ -47,7 +47,8 @@ class Node:
         self.__w = 5 * np.random.randn(
             *weight_size
         )  # local weight for the objective function
-
+        self.__grad = np.zeros_like(self.__w)
+        self.__momentum = momentum
         self.external_update = self.__external_update
 
     @property
@@ -100,9 +101,15 @@ class Node:
         """
         for _ in range(n_iter):
             x = self.local_data.sample()
-            self.__w -= lr * self.grad_f(x, self.__w)
 
-        # time.sleep(0.001)
+            self.__grad = self.__momentum * self.__grad + (
+                1 - self.__momentum
+            ) * self.grad_f(x, self.__w)
+
+            self.__w -= lr * self.__grad
+
+        # import time
+        # time.sleep(0.5)
 
     @beartype
     def __external_update(

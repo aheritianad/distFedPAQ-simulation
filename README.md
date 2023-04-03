@@ -31,7 +31,9 @@ You can find this repo at <https://github.com/aheritianad/distFedPAQ-simulation>
 1. See help for the arguments
    > `python3 main.py --help` or `python3 main.py -h`
 2. Example of a simulation command
-   > `python -i main.py -n 5 -loc 10 -ext 2000 -n-ext-ave 2 -bs 12 -lr 1e-1 -tr seq -st 5`
+   > `python -i main.py -n 5 -loc 100 -ext 1000 -n-ext-ave 2 -bs 12 -lr 1e-1 -mom .1 -tr seq -rs 5`
+   
+![sample_simulation](./images/sample_simulation.svg)
 
 ### Arguments (to fill)
 

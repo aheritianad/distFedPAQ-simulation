@@ -1,9 +1,7 @@
 beartype
-math
 numpy
 matplotlib
 sklearn
-multiprocessing
+multiprocess
 tqdm
 argparse
-itertools

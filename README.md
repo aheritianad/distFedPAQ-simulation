@@ -22,7 +22,7 @@ You can find this repo at <https://github.com/aheritianad/distFedPAQ-simulation>
         You can turn deactivate `.venv` anytime with `deactivate` command.
 
 4. Install all dependencies
-     > `pip3 install -r ./distFedPAQ/requirments.txt`
+     > `pip3 install -r ./distFedPAQ/requirements.txt`
 
 ## Usage
 
@@ -41,7 +41,7 @@ You can find this repo at <https://github.com/aheritianad/distFedPAQ-simulation>
   
 ### Notes
 
-1. `-tr par` does **not** work properly (for the moment), using `seq` is then recommended.
+1. I recommend to use `-tr seq` when `-loc` is *small* and `-tr par` otherwise.
 2. In order to get more flexibility, it is recommended to run in interactive mode (i.e. `python3 -i ...`).
 
 ## Author

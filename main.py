@@ -24,6 +24,7 @@ if __name__ == "__main__":
         n_nodes_ext_ave,
         batch_size,
         lr,
+        momentum,
         add_ones,
         trainer,
         single_times,
@@ -181,6 +182,9 @@ if __name__ == "__main__":
                 style1="-.",
                 style2=":",
             )
+        # ##> LEGEND
+        plt.xlabel("iteration")
+        plt.legend()
         plt.title(title)
         plt.show()
 

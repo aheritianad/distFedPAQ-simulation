@@ -60,7 +60,13 @@ def arg_parser() -> Tuple[
         default=1e-4,
         help="learning rate for a local update. Default to 1e-4.",
     )
-
+    parser.add_argument(
+        "--momentum",
+        "-mom",
+        type=float,
+        default=0,
+        help="momentum for a local update. Default to 0.",
+    )
     parser.add_argument(
         "--with-bias",
         "-bias",
@@ -76,11 +82,11 @@ def arg_parser() -> Tuple[
         help="trainer for the nodes [[seq/sequential]/[par/parallel]]. Default to seq",
     )
     parser.add_argument(
-        "--single-times",
-        "-st",
+        "--repeat-single",
+        "-rs",
         type=int,
         default=1,
-        help="Default to 1",
+        help="number of time that the single node will do a loop of loc local updates before evaluation will be multiplied by this value. Default to 1",
     )
 
     # > argument fetcher from parser
@@ -92,15 +98,17 @@ def arg_parser() -> Tuple[
     nodes_external_averaging = args["nodes_external_averaging"]
     batch_size = args["batch_size"]
     lr = args["learning_rate"]
+    mom = args["momentum"]
     add_ones = args["with_bias"] == "y"
     tr = args["trainer"]
-    st = args["single_times"]
+    rs = args["repeat_single"]
 
     # > checkers
     assert n > 0, f"n ({n}) must be a positive integer"
     assert n_loc_update > 0, f"n_loc_update ({n_loc_update}) must be a positive integer"
     assert batch_size > 0, f"batch size ({batch_size}) must be a positive integer"
     assert lr > 0, f"learning rate ({lr}) must be a positive float"
+    assert 0 <= mom and mom < 1, f"momentum ({mom}) must be in [0,1)"
     assert (
         0 < nodes_external_averaging and nodes_external_averaging <= n
     ), f"n-ext-ave ({nodes_external_averaging}) must be positive and cannot exceed n ({n})"
@@ -110,7 +118,9 @@ def arg_parser() -> Tuple[
         "par",
         "parallel",
     ], f"trainer ({tr}) must be one of 'seq, sequential, par, parallel'."
-    assert st > 0, f"st ({st}) must be a positive integer"
+    assert (
+        rs > 0
+    ), f"number of time  ({rs}) that the single node will be repeated must be a positive integer"
     # > end checkers
 
     trainer = {True: parallel_trainer, False: sequential_trainer}.get("par" in tr)
@@ -122,7 +132,8 @@ def arg_parser() -> Tuple[
         nodes_external_averaging,
         batch_size,
         lr,
+        mom,
         add_ones,
         trainer,
-        st,
+        rs,
     )

@@ -35,9 +35,9 @@ A copy is available here <https://gitfront.io/r/aheritianad/Jf8eQDMabdcc/distFed
 ### Commands
 
 1. See help for the arguments
-   > `python3 main.py --help` or `python3 main.py -h`
+   > `python3 simulator.py --help` or `python3 simulator.py -h`
 2. Example of a simulation command
-   > `python -i simulator.py -n 5 -loc 10 -ext 100 -n-ext-ave 2 -bs 12 -lr 1e-1 -mom 0 -tr seq -rs 5`
+   > `python -i simulator.py -n 5 -loc 10 -ext 100 -n-ext-ave 2 -bs 12 -lr 1e-1 -mom 0 -tr seq -P-path proba/ring_5.csv -rs 5`
 
 I got the following result by running the above command on `diabetes` of `scikit-learn`:
 
@@ -53,28 +53,26 @@ I got the following result by running the above command on `diabetes` of `scikit
 
 ### Arguments
 
-- `-n` or `--nodes`  
-  number of nodes
-- `-loc` or `--local-update`  
-  number of iterations per node for each local update. Default to `10`.
-- `-n-ext-ave` or `--nodes-external-averaging`  
-  number nodes will update externally by averaging. Default to `2`.
-- `-ext` or `--external-update`  
-  number of time that some nodes (see `-n-ext-ave`) will update externally by averaging. Default to `100`.
-- `-bs` or `--batch-size`  
-  size of a batch from local data of a node in each iteration of its local update. Default to `1`.
-- `-lr` or `--learning-rate`  
-  learning rate for nodes' local update. Default to `1e-3`.
-- `-mom` or `--momentum`  
-  momentum for a local update. Value in `[0,1)`. Default to `0`.
-- `-bias` or `--with-bias`  
-  Flag for using `bias` for the model [`y`/`n`]. Default to `y`.
-- `-tr` or `--trainer`  
-  trainer for the nodes [[`seq`/`sequential`]/[`par`/`parallel`]]. Default to `seq`.
-- `-rs` or `--repeat-single`  
-  number of time that the `single node` will do loops of local updates **before** evaluation. Default to `1`.
-- `-P-path` or `--path-to-probability-P`  
-  path to the probability file (`csv type`) which encode the graph. If not set, probability will be uniform on all nodes.
+#### Required
+
+| Short | Long      | Description      |
+| ----- | --------- | ---------------- |
+| `-n`  | `--nodes` | Number of nodes. |
+
+#### Optional
+
+| Short        | Long                         | Description                                                                                                             | Default value          |
+| ------------ | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| `-loc`       | `--local-update`             | Number of iterations per node for each local update.                                                                    | `10`                   |
+| `-n-ext-ave` | `--nodes-external-averaging` | Number nodes will update externally by averaging.                                                                       | `2`                    |
+| `-ext`       | `--external-update`          | Number of time that some nodes (see `-n-ext-ave`) will update externally by averaging.                                  | `100`                  |
+| `-bs`        | `--batch-size`               | Size of a batch from local data of a node in each iteration of its local update.                                        | `1`                    |
+| `-lr`        | `--learning-rate`            | Learning rate for nodes' local update.                                                                                  | `1e-3`                 |
+| `-mom`       | `--momentum`                 | Momentum for a local update. Value in `[0,1)`.                                                                          | `0`                    |
+| `-bias`      | `--with-bias`                | Flag for using `bias` for the model [`y`/`n`].                                                                          | `y`                    |
+| `-tr`        | `--trainer`                  | Trainer for the nodes [[`seq`/`sequential`]/[`par`/`parallel`]].                                                        | `seq`                  |
+| `-rs`        | `--repeat-single`            | Number of time that the `single node` will do loops of local updates **before** evaluation.                             | `1`                    |
+| `-P-path`    | `--path-to-probability-P`    | Path to the probability file (`csv type`) which encode the graph. If not set, probability will be uniform on all nodes. | `P` will be a uniform. |
 
 ### Notes
 

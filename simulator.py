@@ -205,9 +205,9 @@ if __name__ == "__main__":
         plt.title(title)
         plt.show()
 
-    def plot_graph(show_ave=True):
+    def plot_graph(show_contact=True):
         avg = None
-        if show_ave:
+        if show_contact:
             avg = ave
         graph(P, ave=avg)
         plt.show()

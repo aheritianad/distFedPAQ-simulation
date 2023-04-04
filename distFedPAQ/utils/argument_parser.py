@@ -1,5 +1,9 @@
 from beartype.typing import Tuple, List, Callable
+
 from argparse import ArgumentParser
+import numpy as np
+from numpy.typing import NDArray
+
 from distFedPAQ.functional.tools import parallel_trainer, sequential_trainer
 
 __all__ = ["arg_parser"]
@@ -12,7 +16,17 @@ $ python3 -i main.py -n ...
 
 
 def arg_parser() -> Tuple[
-    int, int, int, int, int, float, bool, Callable[..., List[float]]
+    int,
+    int,
+    int,
+    int,
+    int,
+    float,
+    float,
+    bool,
+    Callable[..., List[float]],
+    NDArray,
+    int,
 ]:
 
     parser = ArgumentParser(description=__description)
@@ -88,6 +102,12 @@ def arg_parser() -> Tuple[
         default=1,
         help="number of time that the 'single node' will do loops of local updates before evaluation. 1",
     )
+    parser.add_argument(
+        "--path-to-probability-P",
+        "-P-path",
+        type=str,
+        help="path to the probability file which encode the graph. If not set, probability will be uniform on all nodes.",
+    )
 
     # > argument fetcher from parser
     args = vars(parser.parse_args())
@@ -102,6 +122,7 @@ def arg_parser() -> Tuple[
     add_ones = args["with_bias"] == "y"
     tr = args["trainer"]
     rs = args["repeat_single"]
+    path_proba = args["path_to_probability_P"]
 
     # > checkers
     assert n > 0, f"n ({n}) must be a positive integer"
@@ -125,6 +146,25 @@ def arg_parser() -> Tuple[
 
     trainer = {True: parallel_trainer, False: sequential_trainer}.get("par" in tr)
 
+    if path_proba is not None:
+        P = np.genfromtxt(path_proba, dtype=float, delimiter=",", filling_values=0)
+        assert (
+            len(P.shape) == 2
+        ), f"Probability must be a 2 dim array, {len(P.shape)} dim were given."
+        assert (
+            P.shape[0] == P.shape[1] and P.shape[0] == n
+        ), f"Probability must be a {n}x{n} square matrix, {P.shape[0]}x{P.shape[1]} were given."
+
+        print(P)
+    else:
+        P = 1 / (n - 1) * (np.ones((n, n)) - np.eye(n))
+        # For n = 5
+        # P = array([[0.  , 0.25, 0.25, 0.25, 0.25],
+        #    [0.25, 0.  , 0.25, 0.25, 0.25],
+        #    [0.25, 0.25, 0.  , 0.25, 0.25],
+        #    [0.25, 0.25, 0.25, 0.  , 0.25],
+        #    [0.25, 0.25, 0.25, 0.25, 0.  ]])
+
     return (
         n,
         n_loc_update,
@@ -135,5 +175,6 @@ def arg_parser() -> Tuple[
         mom,
         add_ones,
         trainer,
+        P,
         rs,
     )

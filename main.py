@@ -1,6 +1,6 @@
 from distFedPAQ.nodes import Node
 from distFedPAQ.datasets import pack_data, data_splitter, generate_dummy_data
-from distFedPAQ.utils.plots import custom_plot
+from distFedPAQ.utils.plots import custom_plot, graph
 from distFedPAQ.utils.argument_parser import arg_parser
 from distFedPAQ.functional.loss_functions import mse_loss, grad_mse_loss
 from distFedPAQ.functional.tools import repeat
@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from sklearn.datasets import load_diabetes
 from sklearn.model_selection import train_test_split
 
+from collections import defaultdict
 
 from tqdm import tqdm
 
@@ -27,6 +28,7 @@ if __name__ == "__main__":
         momentum,
         add_ones,
         trainer,
+        P,
         single_times,
     ) = arg_parser()
 
@@ -57,8 +59,8 @@ if __name__ == "__main__":
         ],
         dtype=Node,
     )
+
     # > OUTPUTS PREPARATIONS
-    # ~ test_sample = lambda: np.vstack([node.local_data.sample() for node in nodes])
     losses_train = np.empty((n + 1, n_ext_update + 1))
     losses_test = np.empty((n + 1, n_ext_update + 1))
     print("\n\n\n")
@@ -72,7 +74,6 @@ if __name__ == "__main__":
     for j in tqdm(range(n_ext_update)):
         for i in range(single_times):
             single_node.local_update(n_loc_update)
-        # test_data = test_sample()
         losses_train[0, j + 1] = mse_loss(train_data, single_node.w)
         losses_test[0, j + 1] = mse_loss(test_data, single_node.w)
 
@@ -80,7 +81,6 @@ if __name__ == "__main__":
 
     print(f"\n--- MULTIPLE ({n}) NODES TRAINING ---\n")
 
-    # ~test_data = test_sample()
     # ##> first local update
     outputs = trainer(
         nodes=nodes,
@@ -93,16 +93,22 @@ if __name__ == "__main__":
         losses_train[i + 1, 0] = loss_train
         losses_test[i + 1, 0] = loss_test
 
-    ave = dict()
+    ave = defaultdict(lambda: defaultdict(lambda: 0))
     for j in tqdm(range(n_ext_update)):
         # ##> external averaging
-        selector = np.random.choice(n, size=n_nodes_ext_ave, replace=False)
-        for s in selector:
-            ave[s] = ave.get(s, 0) + 1
-        Node.external_update(*nodes[selector])
+        _i = np.random.randint(n)  # selected node _i for external update
+        available_neighbors = np.nonzero(P[_i])[0].shape[0]
+        num_of_neighbor = min(
+            n_nodes_ext_ave - 1, available_neighbors
+        )  # take all neighbors if less than requested
+        _j_selector = np.random.choice(
+            n, size=num_of_neighbor, p=P[_i], replace=False
+        )  # select the nodes _j s from node _i's neighbor
+        for s in _j_selector:
+            ave[_i][s] += 1
+        nodes[_i].external_update(*nodes[_j_selector])
 
         # ###b> local update
-        # ~ test_data = test_sample()
         outputs = trainer(
             nodes=nodes,
             n_iters=repeat(n_loc_update, n),
@@ -114,8 +120,13 @@ if __name__ == "__main__":
             losses_train[i + 1, j + 1] = loss_train
             losses_test[i + 1, j + 1] = loss_test
     print(f"number of time a node made an external update :")
-    for i, k in sorted(ave.items(), key=lambda x: (x[1], -x[0]), reverse=True):
-        print(f"\tNode_{i+1} -> {k} times.")
+    for _i, _js in sorted(ave.items(), key=lambda x: (-sum(x[1].values()), x[0])):
+        _total = 0
+        print(f"\n\tNode_{_i+1} ->")
+        for _j, _val in sorted(_js.items(), key=lambda x: -x[1]):
+            _total += _val
+            print(f"\t\tNode_{_j+1} : {_val} times")
+        print(f"\t\tNode_{_i+1} contacts its neighbors {_total} times.")
 
     # > INSTRUCTIONS
     print(
@@ -156,7 +167,13 @@ if __name__ == "__main__":
     """
 
     def plot(
-        *indices, start=1, stop=None, single=True, ave=True, train=True, test=True
+        *indices,
+        start=1,
+        stop=None,
+        single=True,
+        ave=True,
+        train=True,
+        test=True,
     ):
         if train:
             custom_plot(
@@ -188,4 +205,12 @@ if __name__ == "__main__":
         plt.title(title)
         plt.show()
 
+    def plot_graph(show_ave=True):
+        avg = None
+        if show_ave:
+            avg = ave
+        graph(P, ave=avg)
+        plt.show()
+
     plot(stop=-1)
+    plot_graph()

@@ -1,6 +1,7 @@
 beartype
 numpy
 matplotlib
+networkx
 sklearn
 multiprocess
 tqdm

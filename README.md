@@ -71,6 +71,8 @@ I got the following result by running the above command on `diabetes` of `scikit
   trainer for the nodes [[`seq`/`sequential`]/[`par`/`parallel`]]. Default to `seq`.
 - `-rs` or `--repeat-single`  
   number of time that the `single node` will do loops of local updates **before** evaluation. Default to `1`.
+- `-P-path` or `--path-to-probability-P`  
+  path to the probability file (`csv type`) which encode the graph. If not set, probability will be uniform on all nodes.
 
 ### Notes
 
@@ -84,4 +86,3 @@ Heritiana Daniel Andriasolofo
 - [x] github : [aheritianad](https://github.com/aheritianad)
 - [x] linkedin : [aheritianad](https://linkedin.com/in/aheritianad)
 - [x] gmail : [aheritianad](mailto:aheritianad@gmail.com)
-  

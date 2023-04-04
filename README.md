@@ -37,17 +37,19 @@ A copy is available here <https://gitfront.io/r/aheritianad/Jf8eQDMabdcc/distFed
 1. See help for the arguments
    > `python3 main.py --help` or `python3 main.py -h`
 2. Example of a simulation command
-   > `python -i main.py -n 5 -loc 10 -ext 100 -n-ext-ave 2 -bs 12 -lr 1e-1 -mom 0 -tr seq -rs 5`
+   > `python -i simulator.py -n 5 -loc 10 -ext 100 -n-ext-ave 2 -bs 12 -lr 1e-1 -mom 0 -tr seq -rs 5`
 
 I got the following result by running the above command on `diabetes` of `scikit-learn`:
 
-| Code                                                          | Plots                                                    | Note                                                                      |
-| ------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------- |
-| `plot(stop=-1)`                                               | ![sample_simulation](./images/sample_simulation_all.svg) | All in one                                                                |
-| `plot(stop=-1,test=False)`                                    | ![train](images/sample_simulation_train.svg)             | On `train dataset`                                                        |
-| `plot(stop=-1,train=False)`                                   | ![test](images/sample_simulation_test.svg)               | On `test dataset`                                                         |
-| `plot(1, single=False)`                                       | ![node 1](images/sample_simulation_node1.svg)            | $Node_{1}$                                                                |
-| `plot(start=2, stop=-1, single=False, ave=False, test=False)` | ![node 2 to -1](images/sample_simulation_node2_-1.svg)   | from $Node_{2}$ to the last node (i.e. $Node_{5}$) on the `train dataset` |
+| Code                                                          | Plots                                                    | Note                                                                           |
+| ------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `plot(stop=-1)`                                               | ![sample_simulation](./images/sample_simulation_all.svg) | All in one                                                                     |
+| `plot(stop=-1,test=False)`                                    | ![train](images/sample_simulation_train.svg)             | On `train dataset`                                                             |
+| `plot(stop=-1,train=False)`                                   | ![test](images/sample_simulation_test.svg)               | On `test dataset`                                                              |
+| `plot(1, single=False)`                                       | ![node 1](images/sample_simulation_node1.svg)            | $Node_{1}$                                                                     |
+| `plot(start=2, stop=-1, single=False, ave=False, test=False)` | ![node 2 to -1](images/sample_simulation_node2_-1.svg)   | from $Node_{2}$ to the last node (i.e. $Node_{5}$) on the `train dataset`      |
+| `plot_graph(show_contact=False)`                              | ![graph without contacts](images/graph_no_contacts.svg)  | Graph whit only probabilities.                                                 |
+| `plot_graph()`                                                | ![graph with contacts](images/graph_contacts.svg)        | Graph with probabilities and number of contacts between nodes during training. |
 
 ### Arguments
 

@@ -43,13 +43,15 @@ def custom_plot(
 def graph(P, ave=None):
     G = nx.from_numpy_array(P)
     pos = nx.spring_layout(G)
-    nx.draw(G, pos, labels={i: i for i in G.nodes})
+    nx.draw(G, pos, labels={i: i + 1 for i in G.nodes})
     e_label = {
-        (i, j): f"proba {(P[i][j],P[j][i])}" for i, j in zip(*np.nonzero(P)) if i <= j
+        (i, j): f"P[{i+1}->{j+1}] = {P[i][j]}\nP[{j+1}->{i+1}] = {P[j][i]}"
+        for i, j in zip(*np.nonzero(P))
+        if i <= j
     }
     if ave is not None:
         for i, j in G.edges:
-            e_label[(i, j)] += f" contact: {ave[i][j] + ave[j][i]}"
+            e_label[(i, j)] += f"\n{ave[i][j] + ave[j][i]}"
 
     nx.draw_networkx_edge_labels(
         G,

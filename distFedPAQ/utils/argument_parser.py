@@ -155,7 +155,6 @@ def arg_parser() -> Tuple[
             P.shape[0] == P.shape[1] and P.shape[0] == n
         ), f"Probability must be a {n}x{n} square matrix, {P.shape[0]}x{P.shape[1]} were given."
 
-        print(P)
     else:
         P = 1 / (n - 1) * (np.ones((n, n)) - np.eye(n))
         # For n = 5

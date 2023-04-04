@@ -4,11 +4,16 @@
 
 You can find this repo at <https://github.com/aheritianad/distFedPAQ-simulation>.
 
+A copy is available here <https://gitfront.io/r/aheritianad/Jf8eQDMabdcc/distFedPAQ-simulation/>.
+
 ## Installation
 
 1. Get a copy of this repo by
     - *cloning* with **git**
-        >`git clone https://github.com/aheritianad/distFedPAQ-simulation.git`
+        - **GITHUB**
+            >`git clone https://github.com/aheritianad/distFedPAQ-simulation.git`
+        - A copy on **GITFRONT**
+            >`git clone https://gitfront.io/r/aheritianad/Jf8eQDMabdcc/distFedPAQ-simulation.git`
     - or by **downloading** a compressed version (`.zip`) at <https://github.com/aheritianad/distFedPAQ-simulation/zipball/master>.
   
 2. Enter into the directory  
